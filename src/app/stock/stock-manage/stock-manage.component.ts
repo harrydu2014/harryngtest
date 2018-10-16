@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { StockService } from '../stock.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stock-manage',
@@ -9,18 +12,18 @@ import { Router } from '@angular/router';
 export class StockManageComponent implements OnInit {
 
   private stocks:Array<Stock>;
-  constructor(public router:Router) { }
+
+  private nameFilter: FormControl = new FormControl();
+
+  private keyword:string;
+
+  constructor(private router:Router, private stockService:StockService) { }
 
   ngOnInit() {
-    this.stocks = [
-      new Stock(1,"1st Stock",1.99,3.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(2,"2nd Stock",1.99,1.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(3,"3rd Stock",1.99,3.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(4,"4th Stock",1.99,4.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(5,"5th Stock",1.99,1.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(6,"6th Stock",1.99,2.5,"testing",["AI","BlockChain","Cloud"]),
-      new Stock(7,"7th Stock",1.99,2.0,"testing",["AI","BlockChain","Cloud"]),
-    ]
+    this.stocks = this.stockService.getStocks();
+    this.nameFilter.valueChanges
+    .pipe(debounceTime(500))
+    .subscribe(value => this.keyword = value)
   }
 
   create() {

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 // import { HttpModule } from '@angular/http';
 // import { FormsModule } from '@angular/forms';
 
@@ -14,7 +15,9 @@ import { StockManageComponent } from './stock/stock-manage/stock-manage.componen
 import { StarsComponent } from './stars/stars.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { StockFormComponent } from './stock/stock-form/stock-form.component';
-
+import { StockService} from './stock/stock.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StockFilterPipe } from './stock/stock-filter.pipe';
 
 
 const routeConfig: Routes = [
@@ -35,15 +38,17 @@ const routeConfig: Routes = [
     StockManageComponent,
     StarsComponent,
     DashboardComponent,
-    StockFormComponent
+    StockFormComponent,
+    StockFilterPipe
   ],
   imports: [
     BrowserModule,
-    // HttpModule,
-    // FormsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
     RouterModule.forRoot(routeConfig)
   ],
-  providers: [],
+  providers: [StockService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
