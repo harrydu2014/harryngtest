@@ -9,8 +9,8 @@ export class StockService {
   constructor() { }
 
   private stocks:Stock[] = [
-    new Stock(1,"1st Stock",1.99,3.5,"testing",["AI","BlockChain","Cloud"]),
-    new Stock(2,"2nd Stock",1.99,1.5,"testing",["AI","BlockChain","Cloud"]),
+    new Stock(1,"1st Stock",1.99,3.5,"testing",["AI","BlockChain"]),
+    new Stock(2,"2nd Stock",1.99,1.5,"testing",["Cloud"]),
     new Stock(3,"3rd Stock",1.99,3.5,"testing",["AI","BlockChain","Cloud"]),
     new Stock(4,"4th Stock",1.99,4.5,"testing",["AI","BlockChain","Cloud"]),
     new Stock(5,"5th Stock",1.99,1.5,"testing",["AI","BlockChain","Cloud"]),
