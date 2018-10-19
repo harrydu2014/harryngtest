@@ -1,22 +1,50 @@
 console.log('test');
 
 import * as express from 'express';
+import { Server } from 'ws';
 const app = express();
 
 app.get('/',(request, response) => response.send('this is the home page!!!!'));
 
-app.get('/stock',(request, response) => {
-    response.json(stocks)
+app.get('/api/stock',(request, response) => {
+    let result = stocks;
+    let params = request.query;
+    if(params.name) {
+        result =  result.filter(stock => stock.name == params.name)
+    }
+    response.json(result)
 });
 
-app.get('/stock/:id',(request, response) => {
+app.get('/api/stock/:id',(request, response) => {
     console.log(request.params.id);
     response.json(stocks.find((stock) => stock.id == request.params.id));
 });
 
-const server = app.listen(8080, 'localhost', () => {
-    console.log('Node server starttd. http://localhost:8080');
+const server = app.listen(8000, 'localhost', () => {
+    console.log('Node server starttd. http://localhost:8000');
 });
+
+var subscriptions = new Set<any>();
+
+var messageCount = 0;
+
+const wsServer =  new Server({port:8081});
+
+wsServer.on('connection', websocket => {
+    console.log('123123123');
+    // websocket.send('welcome');
+    subscriptions.add(websocket);
+})
+
+setInterval(() => {
+    subscriptions.forEach(ws => {
+        if(ws.readyState === 1) {
+            ws.send(JSON.stringify({messageCount: messageCount++}))
+        }else{
+            subscriptions.delete(ws);
+        }
+    })
+}, 2000);
 
 export class Stock {
     constructor(

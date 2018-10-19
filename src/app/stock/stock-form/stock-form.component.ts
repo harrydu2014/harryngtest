@@ -13,31 +13,65 @@ export class StockFormComponent implements OnInit {
 
   formModel: FormGroup;
 
-  stock: Stock;
+  stock: Stock = new Stock(0,"",0,0,"",[])
 
   categories = ["AI","BlockChain","Cloud"];
 
   constructor(private routeInfo:ActivatedRoute, private stockService:StockService, private router:Router) {
-    
+
    }
 
   ngOnInit() {
     let stockId = this.routeInfo.snapshot.params["id"];
-    this.stock = this.stockService.getStock(stockId);
 
     let fb =  new FormBuilder();
     this.formModel = fb.group(
       {
-        name: [this.stock.name, [Validators.required, Validators.minLength(3)]],
-        price: [this.stock.price, [Validators.required]],
-        desc: [this.stock.desc, [Validators.required]],
+        name: ['', [Validators.required, Validators.minLength(3)]],
+        price: [0, [Validators.required]],
+        desc: ['', [Validators.required]],
         categories: fb.array([
-          new FormControl(this.stock.categories.indexOf(this.categories[0]) != -1),
-          new FormControl(this.stock.categories.indexOf(this.categories[1]) != -1),
-          new FormControl(this.stock.categories.indexOf(this.categories[2]) != -1)
+          false,
+          false,
+          false
         ], this.categoriesSelectValidator)
       }
     );
+
+    this.stockService.getStock(stockId).subscribe(
+      data => {
+        console.log(stockId)
+        if(!(stockId == 0)) {
+          this.stock = data;
+          this.formModel.reset(    
+              {
+                name: data.name,
+                price: data.price,
+                desc: data.desc,
+                categories: fb.array([
+                  data.categories.indexOf(this.categories[0]) != -1,
+                  data.categories.indexOf(this.categories[1]) != -1,
+                  data.categories.indexOf(this.categories[2]) != -1
+                ], this.categoriesSelectValidator)
+              }
+            )
+          }
+      }
+    );
+
+    // let fb =  new FormBuilder();
+    // this.formModel = fb.group(
+    //   {
+    //     name: [this.stock.name, [Validators.required, Validators.minLength(3)]],
+    //     price: [this.stock.price, [Validators.required]],
+    //     desc: [this.stock.desc, [Validators.required]],
+    //     categories: fb.array([
+    //       new FormControl(this.stock.categories.indexOf(this.categories[0]) != -1),
+    //       new FormControl(this.stock.categories.indexOf(this.categories[1]) != -1),
+    //       new FormControl(this.stock.categories.indexOf(this.categories[2]) != -1)
+    //     ], this.categoriesSelectValidator)
+    //   }
+    // );
   }
   
   categoriesSelectValidator(control:FormArray){

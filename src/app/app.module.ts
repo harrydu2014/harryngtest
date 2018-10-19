@@ -15,6 +15,7 @@ import { StarsComponent } from './stars/stars.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { StockFormComponent } from './stock/stock-form/stock-form.component';
 import { StockService} from './stock/stock.service';
+import { SocketService} from './header/socket.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StockFilterPipe } from './stock/stock-filter.pipe';
 
@@ -47,7 +48,7 @@ const routeConfig: Routes = [
     HttpClientModule,
     RouterModule.forRoot(routeConfig)
   ],
-  providers: [StockService],
+  providers: [StockService,SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
